@@ -1,0 +1,25 @@
+# Environnement virtuel (très lourd, ne pas envoyer)
+venv/
+.venv/
+env/
+
+# Variables d'environnement (Contient ta clé API Africa's Talking !)
+.env
+
+# Fichiers Python temporaires
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / Packages
+dist/
+build/
+*.egg-info/
+
+# Configuration de l'éditeur (VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Logs et bases de données locales (si présentes)
+*.log
+*.sqlite

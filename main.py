@@ -1,67 +1,63 @@
-from fastapi import FastAPI, Form
-from typing import Optional
+from fastapi import FastAPI, Request, Form
+from app.services.sms_service import envoyer_confirmation_naissance
+import uvicorn
+import random
 
-app = FastAPI(title="Système USSD d'Enregistrement des Naissances")
-
-# 1. Dictionnaire de traduction (À affiner avec Désiré) [cite: 32, 85]
-TRADUCTIONS = {
-    "1": {  # Français
-        "welcome": "CON Bienvenue sur le service d'état civil.\n1. Enregistrer une naissance\n2. Aide",
-        "ask_name": "CON Entrez le NOM complet de l'enfant :",
-        "confirmation": "END Merci. L'enregistrement est en cours. Un numéro de référence vous sera envoyé par SMS."
-    },
-    "2": {  # Langue Locale (Exemple)
-        "welcome": "CON I ni ce. Sélikɛnɛ dɔnniyoro.\n1. Wolon fɛn dɔn\n2. Dɛmɛ",
-        "ask_name": "CON Den tɔgɔ bɛn :",
-        "confirmation": "END I ni ce. An bɛna SMS ci i ma ni reference ye."
-    }
-}
+app = FastAPI(title="Système d'enregistrement des naissances - USSD")
 
 @app.post("/ussd")
 async def ussd_handler(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
     phoneNumber: str = Form(...),
-    text: str = Form(...)
+    text: str = Form("")
 ):
     """
-    Point d'entrée principal pour la passerelle Africa's Talking[cite: 27, 31, 58].
+    Handler principal pour les requêtes USSD.
     """
-    parts = text.split('*') if text != "" else []
-    level = len(parts)
+    # On sépare les saisies de l'utilisateur par l'étoile (*)
+    levels = text.split('*')
     response = ""
 
-    # ÉTAPE 0 : Choix de la langue [cite: 25, 32]
-    if level == 0:
-        response = "CON Choisissez votre langue / Choice language:\n1. Français\n2. Langue Locale"
+    # --- Logique du menu USSD ---
+    if text == "":
+        # Menu principal
+        response = "CON Bienvenue sur TECHNOVIEW\n"
+        response += "1. Enregistrer une naissance\n"
+        response += "2. Quitter"
 
-    # ÉTAPE 1 : Menu Principal [cite: 25]
-    elif level == 1:
-        lang = parts[0]
-        if lang in TRADUCTIONS:
-            response = TRADUCTIONS[lang]["welcome"]
-        else:
-            response = "END Option invalide / Invalid option."
+    elif text == "1":
+        response = "CON Entrez le nom complet de l'enfant :"
 
-    # ÉTAPE 2 : Saisie du Nom [cite: 25, 57]
-    elif level == 2:
-        lang = parts[0]
-        action = parts[1]
-        if action == "1":
-            response = TRADUCTIONS[lang]["ask_name"]
-        else:
-            response = TRADUCTIONS[lang]["welcome"] # Retour au menu ou Aide
+    elif len(levels) == 2 and levels[0] == "1":
+        response = "CON Entrez la date de naissance (JJ/MM/AAAA) :"
 
-    # ÉTAPE FINALE : Validation & Notification [cite: 25, 33, 34]
-    elif level == 3:
-        lang = parts[0]
-        nom_enfant = parts[2]
+    elif len(levels) == 3 and levels[0] == "1":
+        # C'est l'étape finale de la saisie
+        nom_enfant = levels[1]
+        date_naissance = levels[2]
         
-        # TODO: Appel au module de Maxime (MA) pour le stockage sécurisé [cite: 37, 70, 72]
-        # reference = generate_reference()
-        
-        # TODO: Appel au module d'Emmanuel (EM) pour l'envoi du SMS [cite: 34, 98]
-        
-        response = TRADUCTIONS[lang]["confirmation"]
+        # 1. Génération d'un numéro de reçu (Simulation)
+        numero_recu = f"REC-{random.randint(1000, 9999)}"
+
+        # 2. Emplacement pour la sauvegarde en base de données
+        # Ici, tu appelleras la logique de ton fichier database_dump.sql
+        print(f"Sauvegarde en base : {nom_enfant}, né le {date_naissance}")
+
+        # 3. Envoi du SMS de confirmation (Logique d'Emmanuel)
+        # On utilise 'await' car la fonction est asynchrone
+        await envoyer_confirmation_naissance(
+            numero=phoneNumber,
+            nom_enfant=nom_enfant,
+            numero_recu=numero_recu
+        )
+
+        response = f"END Merci. L'enregistrement de {nom_enfant} est terminé.\nUn SMS de confirmation a été envoyé au {phoneNumber}."
+
+    else:
+        response = "END Session terminée. Merci d'avoir utilisé notre service."
 
     return response
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
