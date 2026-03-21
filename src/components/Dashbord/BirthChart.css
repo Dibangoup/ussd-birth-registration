@@ -1,0 +1,15 @@
+.birth-chart-card {
+  background: #ffffff;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  flex: 1;
+}
+
+.birth-chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0890a;    
+  margin-bottom: 16px;
+  text-align: center;    
+} 

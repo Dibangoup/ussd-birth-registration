@@ -1,0 +1,45 @@
+.stat-card {
+  flex: 1;
+  min-width: 160px;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-card--dark    { background: #1a1a1a; }
+.stat-card--green   { background: #4EC943; }
+.stat-card--red     { background: #FF0A0A; }
+.stat-card--default { background: #f5f5f5; border: 1px solid var(--border); }
+
+.stat-card__title { font-size: 11px; font-weight: 400; }
+.stat-card--dark .stat-card__title    { color: #aaaaaa; }
+.stat-card--green .stat-card__title   { color: #a5d6a7; }
+.stat-card--red .stat-card__title     { color: #ef9a9a; }
+.stat-card--default .stat-card__title { color: var(--text-secondary); }
+
+.stat-card__value {
+  font-size: 28px;           
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.stat-card--dark .stat-card__value    { color: #ffffff; }
+.stat-card--green .stat-card__value   { color: #ffffff; }
+.stat-card--red .stat-card__value     { color: #ffffff; }
+.stat-card--default .stat-card__value { color: var(--text-primary); }
+
+.stat-card__trend { font-size: 11px; margin-top: 4px; }
+
+.trend-up   { color: #66bb6a; font-weight: 600; }
+.trend-down { color: #ef5350; font-weight: 600; }
+
+.stat-card--dark .trend-up,
+.stat-card--green .trend-up,
+.stat-card--red .trend-up,
+.stat-card--dark .trend-down,
+.stat-card--green .trend-down,
+.stat-card--red .trend-down { color: rgba(255,255,255,0.9); }
+
+.trend-label { opacity: 0.7; }
