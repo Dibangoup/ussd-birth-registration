@@ -1,0 +1,144 @@
+/* === Shared Page Styles === */
+
+.page-subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin-left: 12px;
+}
+
+.page-table-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
+
+.page-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.page-table thead th {
+  text-align: left;
+  padding: 12px 14px;
+  color: #888;
+  font-weight: 600;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.page-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f7f7f7;
+  color: #333;
+}
+
+.page-table tbody tr:hover {
+  background: #f9f6ff;
+}
+
+.cell-bold {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #aaa;
+  padding: 48px 0;
+  font-size: 0.95rem;
+}
+
+/* === Stats Grid === */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-block {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-block:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+}
+
+.stat-block-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-block-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.stat-block--purple { border-left: 4px solid #7b68ee; }
+.stat-block--purple .stat-block-value { color: #7b68ee; }
+
+.stat-block--green { border-left: 4px solid #22c55e; }
+.stat-block--green .stat-block-value { color: #22c55e; }
+
+.stat-block--red { border-left: 4px solid #E84435; }
+.stat-block--red .stat-block-value { color: #E84435; }
+
+.stat-block--orange { border-left: 4px solid #f59e0b; }
+.stat-block--orange .stat-block-value { color: #f59e0b; }
+
+.stat-block--blue { border-left: 4px solid #3b82f6; }
+.stat-block--blue .stat-block-value { color: #3b82f6; }
+
+.stat-block--pink { border-left: 4px solid #ec4899; }
+.stat-block--pink .stat-block-value { color: #ec4899; }
+
+.stat-block--teal { border-left: 4px solid #14b8a6; }
+.stat-block--teal .stat-block-value { color: #14b8a6; }
+
+.stat-block--dark { border-left: 4px solid #1e1e2e; }
+.stat-block--dark .stat-block-value { color: #1e1e2e; }
+
+/* === Action Buttons (Demandes) === */
+.action-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-validate {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-validate:hover { background: #16a34a; }
+
+.btn-reject {
+  background: #E84435;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-reject:hover { background: #c23024; }

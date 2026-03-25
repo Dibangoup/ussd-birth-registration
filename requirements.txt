@@ -4,8 +4,8 @@ uvicorn[standard]==0.27.1
 python-multipart==0.0.9  # Obligatoire pour lire les données USSD (Form Data)
 
 # --- Base de Données & Sécurité (Maxime) ---
-sqlalchemy==2.0.27
-psycopg2-binary==2.9.9   # Driver pour PostgreSQL
+sqlalchemy>=2.0.36
+pg8000==1.30.5           # Driver PostgreSQL Pure Python (remplace psycopg2)
 pydantic-settings==2.2.1 # Pour gérer les variables d'environnement (.env)
 python-dotenv==1.0.1
 

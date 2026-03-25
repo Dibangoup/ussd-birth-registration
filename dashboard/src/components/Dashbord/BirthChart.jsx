@@ -1,18 +1,10 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, LabelList
 } from "recharts";
 import "./BirthChart.css";
-
-const data = [
-  { jour: "Mon", naissances: 200, label: "18\n6" },
-  { jour: "Mar", naissances: 310, label: "30\n5" },
-  { jour: "Mer", naissances: 240, label: "25\n9" },
-  { jour: "Jeu", naissances: 150, label: "3" },
-  { jour: "Ven", naissances: 220, label: "20\n9" },
-  { jour: "Sam", naissances: 300, label: "21\n4" },
-  { jour: "Dim", naissances: 260, label: "180" },
-];
 
 const CustomLabel = ({ x, y, value }) => (
   <text x={x} y={y - 10} fill="#999" fontSize={10} textAnchor="middle">
@@ -20,10 +12,18 @@ const CustomLabel = ({ x, y, value }) => (
   </text>
 );
 
-const BirthChart = () => {
+const BirthChart = ({ period }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/dashboard/chart?period=${period}`)
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Erreur API chart:", err));
+  }, [period]);
+
   return (
     <div className="birth-chart-card">
-      <h3 className="birth-chart-title">Traffic des naissances</h3>
+      <h3 className="birth-chart-title">Trafic des naissances</h3>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   MdDashboard, MdAssignment, MdPeople,
   MdBarChart, MdLocationOn, MdInbox,
@@ -6,12 +7,12 @@ import {
 import "./Sidebar.css";
 
 const navItems = [
-  { icon: <MdDashboard />, label: "Tableau de bord", active: true },
-  { icon: <MdAssignment />, label: "Déclarations enregistrée(s)", active: false },
-  { icon: <MdPeople />, label: "Parents / Déclarants", active: false },
-  { icon: <MdBarChart />, label: "Statistiques", active: false },
-  { icon: <MdLocationOn />, label: "Lieu de naissance", active: false },
-  { icon: <MdInbox />, label: "Demandes", active: false },
+  { icon: <MdDashboard />, label: "Tableau de bord", path: "/" },
+  { icon: <MdAssignment />, label: "Déclarations enregistrée(s)", path: "/declarations" },
+  { icon: <MdPeople />, label: "Parents / Déclarants", path: "/parents" },
+  { icon: <MdBarChart />, label: "Statistiques", path: "/statistiques" },
+  { icon: <MdLocationOn />, label: "Lieu de naissance", path: "/lieux" },
+  { icon: <MdInbox />, label: "Demandes", path: "/demandes" },
 ];
 
 const bottomItems = [
@@ -21,16 +22,24 @@ const bottomItems = [
 ];
 
 const Sidebar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">
+      <div className="sidebar-logo" onClick={() => navigate("/")} style={{cursor: "pointer"}}>
         <div className="logo-icon">N+</div>
         <span className="logo-text">Naissance+</span>
       </div>
 
       <nav className="sidebar-nav">
         {navItems.map((item, i) => (
-          <div key={i} className={`nav-item ${item.active ? "active" : ""}`}>
+          <div
+            key={i}
+            className={`nav-item ${location.pathname === item.path ? "active" : ""}`}
+            onClick={() => navigate(item.path)}
+            style={{cursor: "pointer"}}
+          >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-label">{item.label}</span>
           </div>
@@ -47,7 +56,7 @@ const Sidebar = () => {
 
       <nav className="sidebar-bottom">
         {bottomItems.map((item, i) => (
-          <div key={i} className="nav-item">
+          <div key={i} className="nav-item" style={{cursor: "pointer"}}>
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-label">{item.label}</span>
           </div>
