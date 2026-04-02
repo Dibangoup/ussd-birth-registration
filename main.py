@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Form
+from fastapi.responses import PlainTextResponse
 from typing import Optional
 
 app = FastAPI(title="Système USSD d'Enregistrement des Naissances")
@@ -17,51 +18,58 @@ TRADUCTIONS = {
     }
 }
 
-@app.post("/ussd")
+@app.post("/ussd", response_class=PlainTextResponse)
 async def ussd_handler(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
     phoneNumber: str = Form(...),
-    text: str = Form(...)
+    text: str = Form("")  # ← "" par défaut pour l'étape initiale
 ):
     """
-    Point d'entrée principal pour la passerelle Africa's Talking[cite: 27, 31, 58].
+    Point d'entrée principal pour la passerelle Africa's Talking [cite: 27, 31, 58].
     """
+    text = text.strip()  # ← Supprime les espaces parasites
     parts = text.split('*') if text != "" else []
     level = len(parts)
-    response = ""
 
     # ÉTAPE 0 : Choix de la langue [cite: 25, 32]
     if level == 0:
-        response = "CON Choisissez votre langue / Choice language:\n1. Français\n2. Langue Locale"
+        return PlainTextResponse(
+            "CON Choisissez votre langue / Choice language:\n1. Français\n2. Langue Locale"
+        )
 
     # ÉTAPE 1 : Menu Principal [cite: 25]
     elif level == 1:
         lang = parts[0]
         if lang in TRADUCTIONS:
-            response = TRADUCTIONS[lang]["welcome"]
+            return PlainTextResponse(TRADUCTIONS[lang]["welcome"])
         else:
-            response = "END Option invalide / Invalid option."
+            return PlainTextResponse("END Option invalide / Invalid option.")
 
     # ÉTAPE 2 : Saisie du Nom [cite: 25, 57]
     elif level == 2:
         lang = parts[0]
         action = parts[1]
+        if lang not in TRADUCTIONS:
+            return PlainTextResponse("END Option invalide / Invalid option.")
         if action == "1":
-            response = TRADUCTIONS[lang]["ask_name"]
+            return PlainTextResponse(TRADUCTIONS[lang]["ask_name"])
         else:
-            response = TRADUCTIONS[lang]["welcome"] # Retour au menu ou Aide
+            return PlainTextResponse(TRADUCTIONS[lang]["welcome"])  # Retour menu ou Aide
 
     # ÉTAPE FINALE : Validation & Notification [cite: 25, 33, 34]
     elif level == 3:
         lang = parts[0]
         nom_enfant = parts[2]
-        
+        if lang not in TRADUCTIONS:
+            return PlainTextResponse("END Option invalide / Invalid option.")
+
         # TODO: Appel au module de Maxime (MA) pour le stockage sécurisé [cite: 37, 70, 72]
         # reference = generate_reference()
-        
-        # TODO: Appel au module d'Emmanuel (EM) pour l'envoi du SMS [cite: 34, 98]
-        
-        response = TRADUCTIONS[lang]["confirmation"]
 
-    return response
+        # TODO: Appel au module d'Emmanuel (EM) pour l'envoi du SMS [cite: 34, 98]
+
+        return PlainTextResponse(TRADUCTIONS[lang]["confirmation"])
+
+    # Cas non géré (niveau > 3 ou inattendu)
+    return PlainTextResponse("END Session terminée / Session ended.")
