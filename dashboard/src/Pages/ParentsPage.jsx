@@ -6,6 +6,7 @@ import "./PageStyles.css";
 const ParentsPage = () => {
   const [parents, setParents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/parents")
@@ -13,20 +14,44 @@ const ParentsPage = () => {
       .catch((err) => { console.error(err); setLoading(false); });
   }, []);
 
+  const filtered = parents.filter((p) => {
+    const q = search.toLowerCase();
+    return (
+      (p.nom_pere || "").toLowerCase().includes(q) ||
+      (p.prenom_pere || "").toLowerCase().includes(q) ||
+      (p.telephone_pere || "").toLowerCase().includes(q) ||
+      (p.nom_mere || "").toLowerCase().includes(q) ||
+      (p.prenom_mere || "").toLowerCase().includes(q) ||
+      (p.telephone_mere || "").toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="layout">
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Parents / Déclarants</h1>
-          <span className="page-subtitle">{parents.length} parent(s) enregistré(s)</span>
+          <span className="page-subtitle">{filtered.length} parent(s) enregistré(s)</span>
         </div>
 
         <div className="page-table-card">
+          <div className="search-bar-wrapper">
+            <span className="search-bar-icon">🔍</span>
+            <input
+              id="search-parents"
+              className="search-bar"
+              type="text"
+              placeholder="Rechercher par nom, prénom, téléphone..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           {loading ? (
             <p className="empty-msg">Chargement...</p>
-          ) : parents.length === 0 ? (
-            <p className="empty-msg">Aucun parent trouvé dans la base de données.</p>
+          ) : filtered.length === 0 ? (
+            <p className="search-no-results">Aucun résultat pour « {search} »</p>
           ) : (
             <table className="page-table">
               <thead>
@@ -41,7 +66,7 @@ const ParentsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {parents.map((p, i) => (
+                {filtered.map((p, i) => (
                   <tr key={p.id || i}>
                     <td>{i + 1}</td>
                     <td className="cell-bold">{p.nom_pere || "—"}</td>

@@ -7,6 +7,7 @@ import "./PageStyles.css";
 const DeclarationsPage = () => {
   const [declarations, setDeclarations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/dashboard/declarations?period=Année")
@@ -14,20 +15,45 @@ const DeclarationsPage = () => {
       .catch((err) => { console.error(err); setLoading(false); });
   }, []);
 
+  const filtered = declarations.filter((d) => {
+    const q = search.toLowerCase();
+    return (
+      (d.enfant || "").toLowerCase().includes(q) ||
+      (d.sexe || "").toLowerCase().includes(q) ||
+      (d.date || "").toLowerCase().includes(q) ||
+      (d.localite || "").toLowerCase().includes(q) ||
+      (d.pere || "").toLowerCase().includes(q) ||
+      (d.mere || "").toLowerCase().includes(q) ||
+      (d.statut || "").toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="layout">
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Déclarations enregistrées</h1>
-          <span className="page-subtitle">{declarations.length} déclaration(s) trouvée(s)</span>
+          <span className="page-subtitle">{filtered.length} déclaration(s) trouvée(s)</span>
         </div>
 
         <div className="page-table-card">
+          <div className="search-bar-wrapper">
+            <span className="search-bar-icon">🔍</span>
+            <input
+              id="search-declarations"
+              className="search-bar"
+              type="text"
+              placeholder="Rechercher par nom, sexe, localité, statut..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           {loading ? (
             <p className="empty-msg">Chargement...</p>
-          ) : declarations.length === 0 ? (
-            <p className="empty-msg">Aucune déclaration trouvée.</p>
+          ) : filtered.length === 0 ? (
+            <p className="search-no-results">Aucun résultat pour « {search} »</p>
           ) : (
             <table className="page-table">
               <thead>
@@ -44,7 +70,7 @@ const DeclarationsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {declarations.map((d, i) => (
+                {filtered.map((d, i) => (
                   <tr key={d.id || i}>
                     <td>{i + 1}</td>
                     <td className="cell-bold">{d.enfant}</td>

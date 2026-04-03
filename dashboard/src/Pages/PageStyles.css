@@ -6,6 +6,57 @@
   margin-left: 12px;
 }
 
+/* === Search Bar === */
+.search-bar-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+  max-width: 420px;
+}
+
+.search-bar-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: color 0.25s ease;
+}
+
+.search-bar-wrapper:focus-within .search-bar-icon {
+  color: #7b68ee;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border: 2px solid #e8e8ef;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  color: #333;
+  background: #fafafe;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.search-bar::placeholder {
+  color: #b0b0b8;
+}
+
+.search-bar:focus {
+  border-color: #7b68ee;
+  box-shadow: 0 0 0 4px rgba(123, 104, 238, 0.12);
+  background: #fff;
+}
+
+.search-no-results {
+  text-align: center;
+  color: #aaa;
+  padding: 32px 0;
+  font-size: 0.9rem;
+}
+
 .page-table-card {
   background: #fff;
   border-radius: 16px;

@@ -7,6 +7,7 @@ import "./PageStyles.css";
 const DemandesPage = () => {
   const [demandes, setDemandes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/demandes")
@@ -22,6 +23,17 @@ const DemandesPage = () => {
       .catch((err) => console.error("Erreur:", err));
   };
 
+  const filtered = demandes.filter((d) => {
+    const q = search.toLowerCase();
+    return (
+      (d.enfant || "").toLowerCase().includes(q) ||
+      (d.sexe || "").toLowerCase().includes(q) ||
+      (d.date || "").toLowerCase().includes(q) ||
+      (d.telephone || "").toLowerCase().includes(q) ||
+      (d.statut || "").toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="layout">
       <Sidebar />
@@ -32,10 +44,22 @@ const DemandesPage = () => {
         </div>
 
         <div className="page-table-card">
+          <div className="search-bar-wrapper">
+            <span className="search-bar-icon">🔍</span>
+            <input
+              id="search-demandes"
+              className="search-bar"
+              type="text"
+              placeholder="Rechercher par nom, statut, téléphone..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           {loading ? (
             <p className="empty-msg">Chargement...</p>
-          ) : demandes.length === 0 ? (
-            <p className="empty-msg">Aucune demande en attente.</p>
+          ) : filtered.length === 0 ? (
+            <p className="search-no-results">Aucun résultat pour « {search} »</p>
           ) : (
             <table className="page-table">
               <thead>
@@ -50,7 +74,7 @@ const DemandesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {demandes.map((d, i) => (
+                {filtered.map((d, i) => (
                   <tr key={d.id || i}>
                     <td>{i + 1}</td>
                     <td className="cell-bold">{d.enfant}</td>
