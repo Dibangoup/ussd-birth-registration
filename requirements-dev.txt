@@ -1,0 +1,8 @@
+# --- Dépendances de Développement et de Tests ---
+# (À installer uniquement en local ou CI avec pip install -r requirements-dev.txt)
+
+# Exécuter les tests unitaires
+pytest==9.0.2            
+
+# Simuler des requêtes au serveur local de test
+httpx==0.27.0            

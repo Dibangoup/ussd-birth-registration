@@ -9,6 +9,5 @@ pg8000==1.30.5           # Driver PostgreSQL Pure Python (remplace psycopg2)
 pydantic-settings==2.2.1 # Pour gérer les variables d'environnement (.env)
 python-dotenv==1.0.1
 
-# --- Communication & Tests (Emmanuel) ---
+# --- API Externes (Emmanuel) ---
 requests==2.31.0         # Pour appeler l'API SMS
-httpx==0.27.0            # Pour les tests asynchrones de l'API00
