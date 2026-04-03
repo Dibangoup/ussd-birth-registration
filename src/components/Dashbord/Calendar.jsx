@@ -1,8 +1,8 @@
 import "./Calendar.css";
 
-const days = ["Mar", "Mer", "Jeu", "Ven", "Sam"];
-const dates = [17, 18, 19, 20, 21];
-const today = 19;
+const days = ["Ven", "Sam", "Dim", "Lun", "Mar"];
+const dates = [27, 28, 29, 30, 31];
+const today = 28;
 
 const Calendar = () => {
   return (
@@ -32,7 +32,7 @@ const Calendar = () => {
         <div className="cal-donut">
           <svg viewBox="0 0 40 40" width="48" height="48">
             <circle cx="20" cy="20" r="16" fill="none" stroke="#f0f0f0" strokeWidth="4"/>
-            <circle cx="20" cy="20" r="16" fill="none" stroke="#E84435" strokeWidth="4"
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#ee5d09" strokeWidth="4"
               strokeDasharray="65 35" strokeLinecap="round"
               transform="rotate(-90 20 20)"/>
             <text x="20" y="20" textAnchor="middle" dominantBaseline="central"

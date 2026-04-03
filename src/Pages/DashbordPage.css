@@ -7,10 +7,10 @@
 .main-content {
   margin-left: 240px;
   flex: 1;
-  padding: 24px 32px;
+  padding: 34px 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   min-height: 100vh;
   width: calc(100% - 240px);
   box-sizing: border-box;
@@ -41,7 +41,7 @@
 .period-tabs {
   display: flex;
   background: #f0f0f0;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 3px;
   gap: 2px;
 }
@@ -62,7 +62,6 @@
   background: #1a1a1a;
   color: #ffffff;
 }
-
 .date-range {
   font-size: 12px;
   color: var(--text-secondary);

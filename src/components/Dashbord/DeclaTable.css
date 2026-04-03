@@ -64,10 +64,11 @@
   color: var(--text-primary);
   border-bottom: 1px solid #f5f5f5;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .decla-table tr:last-child td { border-bottom: none; }
-.decla-table tr:hover td { background: #fafafa; }
+.decla-table tr:hover td { background: #b7b4b4; }
 
 .row-num {
   display: inline-flex;

@@ -5,13 +5,13 @@ import {
 import "./BirthChart.css";
 
 const data = [
-  { jour: "Mon", naissances: 200, label: "18\n6" },
-  { jour: "Mar", naissances: 310, label: "30\n5" },
-  { jour: "Mer", naissances: 240, label: "25\n9" },
-  { jour: "Jeu", naissances: 150, label: "3" },
+  { jour: "Mon", naissances: 55, label: "18\n6" },
+  { jour: "Mar", naissances: 210, label: "30\n5" },
+  { jour: "Mer", naissances: 120, label: "25\n9" },
+  { jour: "Jeu", naissances: 50, label: "3" },
   { jour: "Ven", naissances: 220, label: "20\n9" },
-  { jour: "Sam", naissances: 300, label: "21\n4" },
-  { jour: "Dim", naissances: 260, label: "180" },
+  { jour: "Sam", naissances: 100, label: "21\n4" },
+  { jour: "Dim", naissances: 160, label: "180" },
 ];
 
 const CustomLabel = ({ x, y, value }) => (
@@ -33,9 +33,9 @@ const BirthChart = () => {
           <Line
             type="monotone"
             dataKey="naissances"
-            stroke="#7b68ee"
+            stroke="#5135eb"
             strokeWidth={2}
-            dot={{ r: 4, fill: "#7b68ee" }}
+            dot={{ r: 4, fill: "#5135eb" }}
             strokeDasharray="5 5"
           >
             <LabelList dataKey="label" content={<CustomLabel />} />

@@ -24,7 +24,8 @@
 .logo-icon {
   width: 32px;
   height: 32px;
-  background: #E84435;      
+  background: #ee5d09; 
+  cursor: pointer;     
   border-radius: 8px;
   display: flex;
   align-items: center;

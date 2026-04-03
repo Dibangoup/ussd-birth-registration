@@ -3,10 +3,10 @@ import "./DeclaTable.css";
 
 const declarations = [
   { id: 1, localite: "Béoumi",     pere: "kouakou thomas", mere: "kouakou amoin", heure: "00h15min", date: "21/01/2026", enfant: "Konan kouadio",  sexe: "M", statut: "Enregistrée" },
-  { id: 2, localite: "Kouakoukro", pere: "kouakou amoin",  mere: "Kouassi Eve",   heure: "10h50min", date: "08/02/2026", enfant: "Kouassi edvige", sexe: "F", statut: "Rejetée"     },
-  { id: 3, localite: "Mankono",    pere: "kouakou amoin",  mere: "Koné fatou",    heure: "03h20min", date: "01/03/2026", enfant: "Koné noussa",    sexe: "M", statut: "En attente"  },
-  { id: 4, localite: "Gbaipleu",   pere: "kouakou amoin",  mere: "Gba anne",      heure: "01h00min", date: "09/03/2026", enfant: "Gba solange",    sexe: "F", statut: "Enregistrée" },
-  { id: 5, localite: "Gbaipleu",   pere: "kouakou amoin",  mere: "Gba anne",      heure: "12h39min", date: "09/03/2026", enfant: "Gba solange",    sexe: "F", statut: "Enregistrée" },
+  { id: 2, localite: "Kouakoukro", pere: "kouassi norbert",  mere: "Kouassi Eve",   heure: "10h50min", date: "08/02/2026", enfant: "Kouassi edvige", sexe: "F", statut: "Rejetée"     },
+  { id: 3, localite: "Mankono",    pere: "koné moussa ",  mere: "Koné fatou",    heure: "03h20min", date: "01/03/2026", enfant: "Koné noussa",    sexe: "M", statut: "En attente"  },
+  { id: 4, localite: "Gbaipleu",   pere: "Gba justin",  mere: "Gba anne",      heure: "01h00min", date: "09/03/2026", enfant: "Gba solange",    sexe: "F", statut: "Enregistrée" },
+  { id: 5, localite: "Gagnoa",   pere: "sery françois",  mere: "sery bernadette",      heure: "12h39min", date: "09/03/2026", enfant: "sery solange",    sexe: "F", statut: "Enregistrée" },
 ];
 
 const DeclaTable = () => {
