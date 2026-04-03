@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Form, Depends
+from fastapi import FastAPI, Form, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from sqlalchemy.orm import Session
 from datetime import datetime
 import uuid
+import os
 
 from app.routers import dashboard, pages
 from app.core.db import get_db
@@ -11,13 +12,25 @@ from app.models.birth import PreEnregistrement, Parent, Localite
 
 app = FastAPI(title="Système USSD d'Enregistrement des Naissances")
 
+# Sécurisation des CORS par variable d'environnement
+frontend_urls = os.getenv("FRONTEND_URL", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"],
+    allow_origins=frontend_urls,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Sécurisation globale : Headers HTTP de protection
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(pages.router, prefix="/api", tags=["Pages"])
@@ -34,10 +47,10 @@ MESSAGES = {
 
 @app.post("/ussd")
 async def ussd_handler(
-    sessionId: str = Form(default=""),
-    serviceCode: str = Form(default=""),
-    phoneNumber: str = Form(default=""),
-    text: str = Form(default=""),
+    sessionId: str = Form(default="", max_length=150),
+    serviceCode: str = Form(default="", max_length=50),
+    phoneNumber: str = Form(default="", max_length=20),
+    text: str = Form(default="", max_length=500), # Limitation stricte pour empêcher le buffer overload
     db: Session = Depends(get_db)
 ):
     """

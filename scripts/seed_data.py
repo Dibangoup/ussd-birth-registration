@@ -4,7 +4,7 @@ Exécuter avec : python seed_data.py (depuis la racine du projet, venv activé)
 """
 import sys
 import os
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from datetime import datetime, timedelta, date, time
 import random

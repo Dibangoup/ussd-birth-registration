@@ -101,3 +101,11 @@ $RECYCLE.BIN/
 *.njsproj
 *.sln
 *.sw?
+
+# ========================
+# TEMPORARY LOGS & DEV FILES
+# ========================
+pytest_out.txt
+requirements_freeze.txt
+git_status.txt
+db_sync.log
