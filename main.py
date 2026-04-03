@@ -1,21 +1,15 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import PlainTextResponse
-from typing import Optional
 
 app = FastAPI(title="Système USSD d'Enregistrement des Naissances")
 
-# 1. Dictionnaire de traduction (À affiner avec Désiré) [cite: 32, 85]
-TRADUCTIONS = {
-    "1": {  # Français
-        "welcome": "CON Bienvenue sur le service d'état civil.\n1. Enregistrer une naissance\n2. Aide",
-        "ask_name": "CON Entrez le NOM complet de l'enfant :",
-        "confirmation": "END Merci. L'enregistrement est en cours. Un numéro de référence vous sera envoyé par SMS."
-    },
-    "2": {  # Langue Locale (Exemple)
-        "welcome": "CON I ni ce. Sélikɛnɛ dɔnniyoro.\n1. Wolon fɛn dɔn\n2. Dɛmɛ",
-        "ask_name": "CON Den tɔgɔ bɛn :",
-        "confirmation": "END I ni ce. An bɛna SMS ci i ma ni reference ye."
-    }
+# 🔥 Textes en français uniquement
+TEXTS = {
+    "welcome": "CON Bienvenue sur le service d'état civil.\n1. Enregistrer une naissance\n2. Aide",
+    "ask_name": "CON Entrez le NOM complet de l'enfant :",
+    "help": "CON Ce service permet d'enregistrer une naissance.\nChoisissez 1 pour continuer.",
+    "confirmation": "END Merci. L'enregistrement est en cours. Un numéro de référence vous sera envoyé par SMS.",
+    "invalid": "END Option invalide. Veuillez réessayer."
 }
 
 @app.post("/ussd", response_class=PlainTextResponse)
@@ -23,53 +17,34 @@ async def ussd_handler(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
     phoneNumber: str = Form(...),
-    text: str = Form("")  # ← "" par défaut pour l'étape initiale
+    text: str = Form("")
 ):
-    """
-    Point d'entrée principal pour la passerelle Africa's Talking [cite: 27, 31, 58].
-    """
-    text = text.strip()  # ← Supprime les espaces parasites
+    text = text.strip()
     parts = text.split('*') if text != "" else []
     level = len(parts)
 
-    # ÉTAPE 0 : Choix de la langue [cite: 25, 32]
+    # 🔹 ÉTAPE 0 : Menu principal direct
     if level == 0:
-        return PlainTextResponse(
-            "CON Choisissez votre langue / Choice language:\n1. Français\n2. Langue Locale"
-        )
+        return PlainTextResponse(TEXTS["welcome"])
 
-    # ÉTAPE 1 : Menu Principal [cite: 25]
+    # 🔹 ÉTAPE 1 : Choix utilisateur
     elif level == 1:
-        lang = parts[0]
-        if lang in TRADUCTIONS:
-            return PlainTextResponse(TRADUCTIONS[lang]["welcome"])
-        else:
-            return PlainTextResponse("END Option invalide / Invalid option.")
+        choice = parts[0]
 
-    # ÉTAPE 2 : Saisie du Nom [cite: 25, 57]
+        if choice == "1":
+            return PlainTextResponse(TEXTS["ask_name"])
+        elif choice == "2":
+            return PlainTextResponse(TEXTS["help"])
+        else:
+            return PlainTextResponse(TEXTS["invalid"])
+
+    # 🔹 ÉTAPE 2 : Nom saisi
     elif level == 2:
-        lang = parts[0]
-        action = parts[1]
-        if lang not in TRADUCTIONS:
-            return PlainTextResponse("END Option invalide / Invalid option.")
-        if action == "1":
-            return PlainTextResponse(TRADUCTIONS[lang]["ask_name"])
-        else:
-            return PlainTextResponse(TRADUCTIONS[lang]["welcome"])  # Retour menu ou Aide
+        nom_enfant = parts[1]
 
-    # ÉTAPE FINALE : Validation & Notification [cite: 25, 33, 34]
-    elif level == 3:
-        lang = parts[0]
-        nom_enfant = parts[2]
-        if lang not in TRADUCTIONS:
-            return PlainTextResponse("END Option invalide / Invalid option.")
+        
 
-        # TODO: Appel au module de Maxime (MA) pour le stockage sécurisé [cite: 37, 70, 72]
-        # reference = generate_reference()
+        return PlainTextResponse(TEXTS["confirmation"])
 
-        # TODO: Appel au module d'Emmanuel (EM) pour l'envoi du SMS [cite: 34, 98]
-
-        return PlainTextResponse(TRADUCTIONS[lang]["confirmation"])
-
-    # Cas non géré (niveau > 3 ou inattendu)
-    return PlainTextResponse("END Session terminée / Session ended.")
+    # 🔹 Cas non prévu
+    return PlainTextResponse("END Session terminée.")
