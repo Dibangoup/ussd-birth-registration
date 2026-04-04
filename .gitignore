@@ -44,8 +44,9 @@ venv.bak/
 # NODE.JS / REACT / VITE
 # ========================
 node_modules/
-/dist
-/dist-ssr
+dashboard/node_modules/
+dist/
+dist-ssr/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -86,6 +87,7 @@ ehthumbs_vista.db
 *.stackdump
 [Tt]humbs.db
 $RECYCLE.BIN/
+Desktop.ini
 
 # ========================
 # IDE / ÉDITEURS
@@ -103,9 +105,11 @@ $RECYCLE.BIN/
 *.sw?
 
 # ========================
-# TEMPORARY LOGS & DEV FILES
+# FICHIERS TEMPORAIRES
 # ========================
 pytest_out.txt
 requirements_freeze.txt
 git_status.txt
 db_sync.log
+*.tmp
+*.bak

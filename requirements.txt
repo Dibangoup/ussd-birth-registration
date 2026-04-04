@@ -1,13 +1,24 @@
-# --- Cœur du Système (Jordan) ---
+# ===========================
+# Cœur du Système (FastAPI)
+# ===========================
 fastapi==0.110.0
 uvicorn[standard]==0.27.1
-python-multipart==0.0.9  # Obligatoire pour lire les données USSD (Form Data)
+python-multipart==0.0.9      # Obligatoire pour lire les données USSD (Form Data)
 
-# --- Base de Données & Sécurité (Maxime) ---
+# ===========================
+# Base de Données (SQLAlchemy)
+# ===========================
 sqlalchemy>=2.0.36
-pg8000==1.30.5           # Driver PostgreSQL Pure Python (remplace psycopg2)
-pydantic-settings==2.2.1 # Pour gérer les variables d'environnement (.env)
+pg8000==1.30.5               # Driver PostgreSQL Pure Python (remplace psycopg2)
+
+# ===========================
+# Configuration & Sécurité
+# ===========================
+pydantic>=2.0
+pydantic-settings==2.2.1     # Gestion des variables d'environnement (.env)
 python-dotenv==1.0.1
 
-# --- API Externes (Emmanuel) ---
-requests==2.31.0         # Pour appeler l'API SMS
+# ===========================
+# API Externes (SMS)
+# ===========================
+requests==2.31.0             # Pour appeler l'API SMS
