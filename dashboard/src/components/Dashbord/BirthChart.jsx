@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, LabelList
@@ -20,10 +22,18 @@ const CustomLabel = ({ x, y, value }) => (
   </text>
 );
 
-const BirthChart = () => {
+const BirthChart = ({ period }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/dashboard/chart?period=${period}`)
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Erreur API chart:", err));
+  }, [period]);
+
   return (
     <div className="birth-chart-card">
-      <h3 className="birth-chart-title">Traffic des naissances</h3>
+      <h3 className="birth-chart-title">Trafic des naissances</h3>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
