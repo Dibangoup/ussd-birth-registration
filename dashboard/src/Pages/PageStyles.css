@@ -193,3 +193,104 @@
   transition: background 0.2s;
 }
 .btn-reject:hover { background: #c23024; }
+
+/* === Filter Bar (shared period + status + search) === */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-bar .search-bar-wrapper {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Period Tabs (reused from DashbordPage) */
+.filter-bar .period-tabs {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.filter-bar .period-tab {
+  padding: 7px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-bar .period-tab:hover {
+  background: #e4e4e4;
+}
+
+.filter-bar .period-tab.active {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Status Dropdown */
+.status-select {
+  padding: 8px 14px;
+  border: 2px solid #e8e8ef;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #333;
+  background: #fafafe;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  min-width: 140px;
+}
+
+.status-select:focus {
+  border-color: #7b68ee;
+  box-shadow: 0 0 0 4px rgba(123, 104, 238, 0.12);
+}
+
+/* Sortable Table Headers */
+.page-table thead th.sortable {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.page-table thead th.sortable:hover {
+  color: #7b68ee;
+}
+
+.sort-arrow {
+  margin-left: 4px;
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+.sort-arrow.active {
+  opacity: 1;
+  color: #7b68ee;
+}
+
+/* Filter count badge */
+.filter-count {
+  font-size: 0.78rem;
+  color: #888;
+  white-space: nowrap;
+  padding: 6px 12px;
+  background: #f5f5fa;
+  border-radius: 8px;
+  font-weight: 500;
+}

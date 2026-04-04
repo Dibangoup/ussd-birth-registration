@@ -2,13 +2,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Calendar.css";
 
+const POLL_INTERVAL = 10000;
+
 const Calendar = ({ period }) => {
   const [data, setData] = useState({ validation_rate: 0, total: 0 });
 
-  useEffect(() => {
+  const fetchCalendar = () => {
     axios.get(`http://localhost:8000/api/dashboard/calendar?period=${period}`)
       .then((res) => setData(res.data))
       .catch((err) => console.error("Erreur API calendar:", err));
+  };
+
+  useEffect(() => {
+    fetchCalendar();
+    const interval = setInterval(fetchCalendar, POLL_INTERVAL);
+    return () => clearInterval(interval);
   }, [period]);
 
   // Dates dynamiques centrées sur aujourd'hui

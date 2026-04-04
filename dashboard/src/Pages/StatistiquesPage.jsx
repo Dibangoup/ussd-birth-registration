@@ -3,15 +3,25 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar/Sidebar";
 import "./PageStyles.css";
 
+const POLL_INTERVAL = 10000;
+
 const StatistiquesPage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [period, setPeriod] = useState("Mois");
 
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/statistiques")
+  const fetchStats = () => {
+    axios.get(`http://localhost:8000/api/statistiques?period=${period}`)
       .then((res) => { setStats(res.data); setLoading(false); })
       .catch((err) => { console.error(err); setLoading(false); });
-  }, []);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchStats();
+    const interval = setInterval(fetchStats, POLL_INTERVAL);
+    return () => clearInterval(interval);
+  }, [period]);
 
   if (loading) return (
     <div className="layout"><Sidebar /><main className="main-content"><p className="empty-msg">Chargement...</p></main></div>
@@ -23,7 +33,23 @@ const StatistiquesPage = () => {
       <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Statistiques</h1>
-          <span className="page-subtitle">Vue d'ensemble complète</span>
+          <span className="page-subtitle">Vue filtrée par période</span>
+        </div>
+
+        {/* Filtre période */}
+        <div className="filter-bar">
+          <div className="period-tabs">
+            {["Jour", "Semaine", "Mois", "Année", "Tout"].map((p) => (
+              <button
+                key={p}
+                className={`period-tab ${p === period ? "active" : ""}`}
+                onClick={() => setPeriod(p)}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+          <span className="filter-count">Période : {period}</span>
         </div>
 
         <div className="stats-grid">

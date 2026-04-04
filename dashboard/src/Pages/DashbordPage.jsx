@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar/Sidebar";
 import StatCard from "../components/Dashbord/StatCard";
@@ -6,6 +6,8 @@ import BirthChart from "../components/Dashbord/BirthChart";
 import Calendar from "../components/Dashbord/Calendar";
 import DeclaTable from "../components/Dashbord/DeclaTable";
 import "./DashbordPage.css";
+
+const POLL_INTERVAL = 10000; // 10 secondes
 
 const DashboardPage = () => {
   const [period, setPeriod] = useState("Mois");
@@ -17,10 +19,16 @@ const DashboardPage = () => {
     en_attente: 0
   });
 
-  useEffect(() => {
+  const fetchStats = () => {
     axios.get(`http://localhost:8000/api/dashboard/stats?period=${period}`)
       .then((res) => setStats(res.data))
       .catch((err) => console.error("Erreur API stats:", err));
+  };
+
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, POLL_INTERVAL);
+    return () => clearInterval(interval);
   }, [period]);
 
   return (
@@ -28,7 +36,9 @@ const DashboardPage = () => {
       <Sidebar />
 
       <main className="main-content">
+        
         {/* Header */}
+
         <div className="page-header">
           <h1 className="page-title">Tableau de bord</h1>
           <div className="header-controls">
@@ -54,6 +64,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Stat Cards */}
+
         <div className="stat-cards-row">
           <StatCard
             title="Déclarations Enregistrée(s)"
@@ -86,6 +97,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Chart + Calendar */}
+
         <div className="chart-row">
           <BirthChart period={period} />
           <Calendar period={period} />

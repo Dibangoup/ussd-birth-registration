@@ -14,7 +14,7 @@
 .stat-card--default { background: #f5f5f5; border: 1px solid var(--border); }
 
 .stat-card__title { font-size: 11px; font-weight: 400; }
-.stat-card--dark .stat-card__title    { color: #aaaaaa; }
+.stat-card--dark .stat-card__title    { color: #f7f4f4; }
 .stat-card--green .stat-card__title   { color: #a5d6a7; }
 .stat-card--red .stat-card__title     { color: #ef9a9a; }
 .stat-card--default .stat-card__title { color: var(--text-secondary); }

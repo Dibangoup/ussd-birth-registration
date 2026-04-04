@@ -1,10 +1,21 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from datetime import datetime, timedelta
 from app.core.db import get_db
 from app.models.birth import PreEnregistrement, Parent, Localite
 
 router = APIRouter()
+
+def get_threshold_date(period: str) -> datetime:
+    now = datetime.utcnow()
+    if period == "Jour":
+        return now - timedelta(days=1)
+    elif period == "Semaine":
+        return now - timedelta(days=7)
+    elif period == "Année":
+        return now - timedelta(days=365)
+    return now - timedelta(days=30)
 
 @router.get("/parents")
 def get_all_parents(db: Session = Depends(get_db)):
@@ -42,13 +53,25 @@ def get_all_localites(db: Session = Depends(get_db)):
     ]
 
 @router.get("/statistiques")
-def get_full_stats(db: Session = Depends(get_db)):
-    total = db.query(PreEnregistrement).count()
-    valides = db.query(PreEnregistrement).filter(PreEnregistrement.statut == "valide").count()
-    rejetees = db.query(PreEnregistrement).filter(PreEnregistrement.statut == "rejete").count()
-    en_attente = db.query(PreEnregistrement).filter(PreEnregistrement.statut == "en_attente").count()
-    garcons = db.query(PreEnregistrement).filter(PreEnregistrement.sexe == "M").count()
-    filles = db.query(PreEnregistrement).filter(PreEnregistrement.sexe == "F").count()
+def get_full_stats(
+    period: str = Query("Tout", description="Période : Jour, Semaine, Mois, Année, Tout"),
+    db: Session = Depends(get_db)
+):
+    # Construction de la requête de base selon la période
+    if period == "Tout":
+        base = db.query(PreEnregistrement)
+    else:
+        threshold = get_threshold_date(period)
+        base = db.query(PreEnregistrement).filter(PreEnregistrement.created_at >= threshold)
+
+    total = base.count()
+    valides = base.filter(PreEnregistrement.statut == "valide").count()
+    rejetees = base.filter(PreEnregistrement.statut == "rejete").count()
+    en_attente = base.filter(PreEnregistrement.statut == "en_attente").count()
+    garcons = base.filter(PreEnregistrement.sexe == "M").count()
+    filles = base.filter(PreEnregistrement.sexe == "F").count()
+
+    # Localités et parents sont des totaux absolus (pas filtrés par période)
     localites = db.query(Localite).count()
     parents_count = db.query(Parent).count()
 
@@ -64,9 +87,25 @@ def get_full_stats(db: Session = Depends(get_db)):
     }
 
 @router.get("/demandes")
-def get_demandes(db: Session = Depends(get_db)):
-    records = db.query(PreEnregistrement).order_by(PreEnregistrement.created_at.desc()).all()
-    
+def get_demandes(
+    period: str = Query("Tout", description="Période : Jour, Semaine, Mois, Année, Tout"),
+    statut: str = Query("Tous", description="Statut : Tous, en_attente, valide, rejete"),
+    db: Session = Depends(get_db)
+):
+    # Requête de base
+    base = db.query(PreEnregistrement)
+
+    # Filtre par période
+    if period != "Tout":
+        threshold = get_threshold_date(period)
+        base = base.filter(PreEnregistrement.created_at >= threshold)
+
+    # Filtre par statut
+    if statut != "Tous":
+        base = base.filter(PreEnregistrement.statut == statut)
+
+    records = base.order_by(PreEnregistrement.created_at.desc()).all()
+
     statut_map = {
         "en_attente": "En attente",
         "valide": "Enregistrée",

@@ -3,15 +3,23 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar/Sidebar";
 import "./PageStyles.css";
 
+const POLL_INTERVAL = 10000;
+
 const ParentsPage = () => {
   const [parents, setParents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
+  const fetchParents = () => {
     axios.get("http://localhost:8000/api/parents")
       .then((res) => { setParents(res.data); setLoading(false); })
       .catch((err) => { console.error(err); setLoading(false); });
+  };
+
+  useEffect(() => {
+    fetchParents();
+    const interval = setInterval(fetchParents, POLL_INTERVAL);
+    return () => clearInterval(interval);
   }, []);
 
   const filtered = parents.filter((p) => {

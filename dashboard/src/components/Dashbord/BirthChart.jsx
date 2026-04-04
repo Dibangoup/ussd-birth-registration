@@ -12,13 +12,21 @@ const CustomLabel = ({ x, y, value }) => (
   </text>
 );
 
+const POLL_INTERVAL = 10000;
+
 const BirthChart = ({ period }) => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
+  const fetchChart = () => {
     axios.get(`http://localhost:8000/api/dashboard/chart?period=${period}`)
       .then((res) => setData(res.data))
       .catch((err) => console.error("Erreur API chart:", err));
+  };
+
+  useEffect(() => {
+    fetchChart();
+    const interval = setInterval(fetchChart, POLL_INTERVAL);
+    return () => clearInterval(interval);
   }, [period]);
 
   return (
@@ -33,9 +41,9 @@ const BirthChart = ({ period }) => {
           <Line
             type="monotone"
             dataKey="naissances"
-            stroke="#7b68ee"
+            stroke="#5135eb"
             strokeWidth={2}
-            dot={{ r: 4, fill: "#7b68ee" }}
+            dot={{ r: 4, fill: "#5135eb" }}
             strokeDasharray="5 5"
           >
             <LabelList dataKey="label" content={<CustomLabel />} />

@@ -3,12 +3,13 @@ import axios from "axios";
 import StatusBadge from "../ui/StatusBadge";
 import "./DeclaTable.css";
 
+const POLL_INTERVAL = 10000;
+
 const DeclaTable = ({ period, search = "" }) => {
   const [declarations, setDeclarations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchDeclarations = () => {
-    setLoading(true);
     axios.get(`http://localhost:8000/api/dashboard/declarations?period=${period}`)
       .then((res) => {
         setDeclarations(res.data);
@@ -22,6 +23,8 @@ const DeclaTable = ({ period, search = "" }) => {
 
   useEffect(() => {
     fetchDeclarations();
+    const interval = setInterval(fetchDeclarations, POLL_INTERVAL);
+    return () => clearInterval(interval);
   }, [period]);
 
   // Filtrage client-side par recherche

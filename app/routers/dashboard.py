@@ -20,12 +20,12 @@ def get_threshold_date(period: str) -> datetime:
 @router.get("/stats")
 def get_dashboard_stats(period: str = "Mois", db: Session = Depends(get_db)):
     threshold = get_threshold_date(period)
-    query = db.query(PreEnregistrement).filter(PreEnregistrement.created_at >= threshold)
+    base = db.query(PreEnregistrement).filter(PreEnregistrement.created_at >= threshold)
     
-    total_valide = query.filter(PreEnregistrement.statut == "valide").count()
-    total_recues = query.count()
-    total_rejete = query.filter(PreEnregistrement.statut == "rejete").count()
-    total_attente = query.filter(PreEnregistrement.statut == "en_attente").count()
+    total_recues = base.count()
+    total_valide = base.filter(PreEnregistrement.statut == "valide").count()
+    total_rejete = base.filter(PreEnregistrement.statut == "rejete").count()
+    total_attente = base.filter(PreEnregistrement.statut == "en_attente").count()
 
     return {
         "valides": total_valide,
